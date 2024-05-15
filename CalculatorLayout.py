@@ -14,40 +14,35 @@ def on_click(text) :
     
     return lambda : screen_entry.insert(END, text)
 
+def show_error_window(title,message) :
+    newWindow = Toplevel(root)
+    newWindow.title(title)
+    label = ttk.Label(newWindow, text=message, justify="center", font="overstrike 11 bold").pack()
+    destroy_button = ttk.Button(newWindow, text="OK", command=newWindow.destroy).pack()
+
 # This function calculates the result 
-equation_list = []
+equation_list = [] # | This list is made so i can use it in history function.
 def show() :
     equation = entry_string.get()
     
-    pattern = re.compile(r'\(*[0-9]*\.?[0-9]*\)*[\+\-\*\/]\(*[0-9]+\.?[0-9]*\)*')
-    pattern_division_with_zero = re.compile(r"\/[0]$")
+    pattern = re.compile(r'\(*[0-9]*\.?[0-9]*\)*[\+\-\*\/]\(*[0-9]+\.?[0-9]*\)*') # | This pattern, makes sure the input is valid.
+    pattern_division_with_zero = re.compile(r"\/[0]$") # | This pattern makes sure, you can't devide a number with 0.
 
-    if pattern.match(equation) :
+    if pattern.match(equation) : # | If the input matches the pattern
 
-        if pattern_division_with_zero.search(equation) :
-            newWindow = Toplevel(root) 
-            newWindow.title("New Window") 
-            newWindow.geometry("200x200")
-            label = ttk.Label(newWindow, text="You can't divide a number\nwith zero.\nCheck your input!",justify=CENTER,
-                              font="overstrike 11 bold ").pack()
-            destroy_button = ttk.Button(newWindow, text="OK", command=newWindow.destroy).pack()
+        if pattern_division_with_zero.search(equation) : # | We have to check if there is a division with 0 | 
+            show_error_window("Divsion with zero", "You can't divide a number\nwith zero.\nCheck your input!") # | If that's the case, this is the pop up window to warn you.
+           
 
-        else :
+        else : # | If the input is valid, i calculate the result.
             var_x = str(equation)
-            equation_list.append(var_x)
-            result = eval(equation)
+            equation_list.append(var_x) ## | I append the equation to the list, so i can use it in history function.
+            result = eval(equation) 
             entry_string.set(result)
             
-    else :
-        newWindow = Toplevel(root) 
-        newWindow.title("New Window") 
-        newWindow.geometry("200x200")
-        newWindow.resizable(0,0)
-        label = ttk.Label(newWindow, 
-                          text="You either inserted a letter,\nor you didnt complete the\ncalculation.\nCheck your input!",
-                          justify=CENTER,
-                          font="overstrike 11 bold ").pack()
-        destroy_button = ttk.Button(newWindow, text="OK", command=newWindow.destroy).pack()
+    else : # | This else is here, to prevent the user from inserting a letter, a double opperator (e.g. ++) or didn't complete the equation (e.g 39+) | Anything but the pattern
+        # i created, is not allowed.
+        show_error_window("Invalid Input", "You either inserted a letter,\nor you didnt complete the\ncalculation.\nCheck your input!") # | This is again a pop up window to warn you.
 
 
 
