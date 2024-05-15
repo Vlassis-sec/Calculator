@@ -23,11 +23,21 @@ def show() :
     pattern_division_with_zero = re.compile(r"\/[0]$")
 
     if pattern.match(equation) :
-        var_x = str(equation)
-        equation_list.append(var_x)
-        result = eval(equation)
-        entry_string.set(result)
 
+        if pattern_division_with_zero.search(equation) :
+            newWindow = Toplevel(root) 
+            newWindow.title("New Window") 
+            newWindow.geometry("200x200")
+            label = ttk.Label(newWindow, text="You can't divide a number\nwith zero.\nCheck your input!",justify=CENTER,
+                              font="overstrike 11 bold ").pack()
+            destroy_button = ttk.Button(newWindow, text="OK", command=newWindow.destroy).pack()
+
+        else :
+            var_x = str(equation)
+            equation_list.append(var_x)
+            result = eval(equation)
+            entry_string.set(result)
+            
     else :
         newWindow = Toplevel(root) 
         newWindow.title("New Window") 
@@ -39,14 +49,6 @@ def show() :
                           font="overstrike 11 bold ").pack()
         destroy_button = ttk.Button(newWindow, text="OK", command=newWindow.destroy).pack()
 
-    if pattern_division_with_zero.search(equation) :
-        newWindow = Toplevel(root) 
-        newWindow.title("New Window") 
-        newWindow.geometry("200x200")
-        label = ttk.Label(newWindow, text="You can't divide a number\nwith zero.\nCheck your input!",justify=CENTER,
-                          font="overstrike 11 bold ").pack()
-        destroy_button = ttk.Button(newWindow, text="OK", command=newWindow.destroy).pack()
-    
 
 
 def history() :
