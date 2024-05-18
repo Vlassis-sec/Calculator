@@ -1,3 +1,4 @@
+## IMPORT LIBRARIES
 from tkinter import *
 from tkinter import ttk, font
 import re
@@ -14,6 +15,7 @@ def on_click(text) :
     
     return lambda : screen_entry.insert(END, text)
 
+# This function is making pop-up windows 
 def show_error_window(title,message) :
     newWindow = Toplevel(root)
     newWindow.title(title)
@@ -45,22 +47,23 @@ def show() :
         show_error_window("Invalid Input", "You either inserted a letter,\nor you didnt complete the\ncalculation.\nCheck your input!") # | This is again a pop up window to warn you.
 
 
-
+# This function stores the calculations that has been made into a listbox.
 def history() :
-    newWindow = Toplevel(root) 
-    listbox = Listbox(newWindow, selectmode=SINGLE,width=40, height=20)
+    newWindow = Toplevel(root)
+    newWindow.title("History") 
+    listbox = Listbox(newWindow, selectmode=SINGLE,width=40, height=20) # This is the listbox with the calculations.
     
 
     for i in equation_list :
-        listbox.insert(0, i)
+        listbox.insert(0, i) # This for, inserts every calculation into the listbox.
  
-    def get_element() :
+    def get_element() : # This function, takes the calculation from the listbox, and set's it into the entry of the calculator.
         element = listbox.get(listbox.curselection())
         entry_string.set(element)
    
 
 
-    insert_button = ttk.Button(newWindow,text="INSERT",command=lambda: get_element())
+    insert_button = ttk.Button(newWindow,text="INSERT",command=get_element)
     listbox.pack()
     insert_button.pack()
     
@@ -115,74 +118,64 @@ frame2.rowconfigure(1,weight=1)
 frame2.rowconfigure(2,weight=1)
 frame2.rowconfigure(3,weight=1)
 
-## STYLE 
+ 
 
 
 ## BUTTONS
 
+def setup_buttons(buttons_list, row) : # This function takes a list (with that buttons that has to be made), and the row (the row that the buttons will be inserted).
+    
+    for i, button_text in enumerate(buttons_list) : # This for iterates into the list, so the buttons can be made.
 
-button1 = ttk.Button(frame2, text="1", command= on_click("1"))
-button2 = ttk.Button(frame2, text="2", command= on_click("2"))
-button3 = ttk.Button(frame2, text="3", command= on_click("3"))
-button4 = ttk.Button(frame2, text="4", command= on_click("4"))
-button5 = ttk.Button(frame2, text="5", command= on_click("5"))
-button6 = ttk.Button(frame2, text="6", command= on_click("6"))
-button7 = ttk.Button(frame2, text="7", command= on_click("7"))
-button8 = ttk.Button(frame2, text="8", command= on_click("8"))
-button9 = ttk.Button(frame2, text="9", command= on_click("9"))
-button0 = ttk.Button(frame2, text="0", command= on_click("0"))
-button_plus = ttk.Button(frame2, text="+", command= on_click("+"))
-button_minus = ttk.Button(frame2, text="-", command= on_click("-"))
-button_div = ttk.Button(frame2, text="/", command= on_click("/"))
-button_mult = ttk.Button(frame2, text="*", command= on_click("*"))
-button_equal = ttk.Button(frame2, text="=", command=show)
-button_dot = ttk.Button(frame2, text=".", command= on_click("."))
-button_right_bracket = ttk.Button(frame2, text=")", command= on_click(")"))
-button_left_bracket = ttk.Button(frame2, text="(", command= on_click("("))
-button_clear = ttk.Button(frame2, text = "CE", command=clear)
-button_del = ttk.Button(frame2, text= "Del", command=delete)
-button_history = ttk.Button(frame2, text="History", command=history)
-
-# FIRST ROW
-button7.grid(column=0, row=0,sticky=(NSEW))
-button8.grid(column=1, row=0,sticky=(NSEW))
-button9.grid(column=2, row=0,sticky=(NSEW))
-button_div.grid(column=3, row=0,sticky=(NSEW))
-
-# SECOND ROW
-button4.grid(column=0, row = 1,sticky=(NSEW))
-button5.grid(column=1, row = 1,sticky=(NSEW))
-button6.grid(column=2, row = 1,sticky=(NSEW))
-button_mult.grid(column=3, row = 1,sticky=(NSEW))
-
-# THIRD ROW
-button1.grid(column=0, row=2,sticky=(NSEW))
-button2.grid(column=1, row=2,sticky=(NSEW))
-button3.grid(column=2, row=2,sticky=(NSEW))
-button_minus.grid(column=3, row=2,sticky=(NSEW))
-
-# FOURTH ROW
-button0.grid(column=0, row =3,sticky=(NSEW))
-button_dot.grid(column=2, row=3, sticky=(NSEW))
-button_equal.grid(column=4, row=3,sticky=(NSEW))
-button_plus.grid(column=3, row=3,sticky=(NSEW))
-
-# BRACKETS | BACKSPACE | CLEAR | HISTORY
-button_right_bracket.grid(column=4, row=1, sticky=(NSEW))
-button_del.grid(column = 1, row = 3, sticky = (NSEW))
-button_left_bracket.grid(column=4, row=2, sticky=(NSEW))
-button_clear.grid(column=4, row= 0,sticky=(NSEW))
-button_history.grid(columnspan=5, row=4, sticky=(NSEW))
+        # If and elif's check the buttons
+        # This is happening, because some buttons are made for different purposes
+        # Example : The "History" button, just pop up a list with the calculations.
+        if button_text == "CE" :                                                                
+            button = ttk.Button(frame2, text=button_text, command=clear)
+            button.grid(column=i, row = row, sticky=(NSEW))
+        elif button_text == "=" :
+            button = ttk.Button(frame2, text=button_text, command=show)
+            button.grid(column=i, row = row, sticky=(NSEW))
+        elif button_text == "History" :
+            button = ttk.Button(frame2, text=button_text, command=history)
+            button.grid(columnspan=5, row = row, sticky=(NSEW))
+        elif button_text == "Del" :
+            button = ttk.Button(frame2, text=button_text, command=delete)
+            button.grid(column=i, row = row, sticky=(NSEW))
+        # This else, makes a button for every number
+        else :
+            button = ttk.Button(frame2, text=button_text, command=on_click(button_text))
+            button.grid(column=i, row = row, sticky=(NSEW))
 
 
+# LISTS AND FUNCTION CALLS 
 
+# First row :
+first_row = ["7", "8", "9", "/", "CE"]
+setup_buttons(first_row,0)
+
+# Second row :
+second_row = ["4", "5", "6", "*", ")"]
+setup_buttons(second_row,1)
+
+# Third row :
+third_row = ["1", "2", "3", "-", "("]
+setup_buttons(third_row,2)
+
+# Forth row :
+forth_row = ["0", "Del", ".", "+", "="]
+setup_buttons(forth_row, 3)
+
+# Fifth row :
+fifth_row = ["History"]
+setup_buttons(fifth_row,4)
+
+
+# The entry is the screen of the calculator.
 entry_string = StringVar()
 screen_entry = ttk.Entry(frame1,font=("claimcheck 30"),textvariable=entry_string, justify=RIGHT, validate="key")
 screen_entry.place(width=400, height=100)
 
 
-
-
-
-
+# RUN
 root.mainloop()
